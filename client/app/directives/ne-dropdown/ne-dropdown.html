@@ -1,0 +1,17 @@
+<ui-select
+    ng-title="ctrl.getTitle()"
+    ng-model="ctrl.model"
+    ng-disabled="ctrl.disabled"
+    on-select="ctrl.callback($item)">
+
+
+    <ui-select-match placeholder="{{ctrl.getPlaceholder()}}">
+        <span ng-bind-html="$select.selected[ctrl.getProp()]"></span>
+        <span ng-transclude></span>
+    </ui-select-match>
+
+    <ui-select-choices repeat="item in ctrl.items | filter: $select.search track by $index">
+        <span ng-bind="item[ctrl.getProp()]"></span>
+    </ui-select-choices>
+
+</ui-select>

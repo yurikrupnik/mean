@@ -1,0 +1,11 @@
+
+<button toggle-state="$ctrl.hidden">toggle</button>
+<div ng-if="$ctrl.hidden">payments</div>
+
+<ne-dropdown model="$ctrl.person" items="$ctrl.items" prop="name" placeholder="choose a person">
+    <small>
+        {{$parent.$select.selected.email}} {{$parent.$select.selected.age}}
+    </small>
+</ne-dropdown>
+<div>current selected person {{$ctrl.person}}</div>
+
