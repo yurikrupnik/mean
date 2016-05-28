@@ -1,3 +1,5 @@
 (function () {
-    angular.module('meanAppServices', []);
+    "use strict";
+
+    angular.module('meanAppServices', ['api']);
 })();

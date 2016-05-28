@@ -1,11 +1,46 @@
 "use strict";
 
+
+
 class PaymentsComponent {
-    constructor(payments) {
-        this.message = 'Hello';
-        this.hidden = true;
-        // this.payments = payments;
-        this.payments = payments.findAll();
+    constructor(payments, api) {
+        var setGridDataAndCount = (data) => {
+            this.gridData = data.data || [];
+            this.totalCount = data.count || 0;
+        };
+
+        var returnGridData = (data) => data.data;
+
+        // get all - call on init
+        api.getFullData().then(setGridDataAndCount);
+
+        // get all for csv
+        // this.createCSV = function () { // we just return data to create the csv, can manipulate first ofc
+        //     return api.getFullData().then(returnGridData);
+        // };
+
+        // get by page
+        // this.getDataByPage = function (page) {
+        //     return api.getByPage(page)
+        //         .then(data => this.gridData = data);
+        // };
+
+
+        // this.gridOptions = {};
+        // this.gridOptions.columnDefs = [{field: 'id', displayName: 'id'}, {field: 'name', displayName: 'name'}];
+        //
+        // this.filename = 'oss_changes';
+        //
+        // this.grid = {
+        //     options: {},
+        //     api: {},
+        //     methods: {}
+        // };
+        // payments.findAll((data) => {
+        //     this.total = 500;
+        //     this.payments = data;
+        // });
+        this.itemsPerPage = 100;
         this.items = [
             {name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States'},
             {name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina'},
@@ -18,6 +53,8 @@ class PaymentsComponent {
             {name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia'},
             {name: 'Nicolás', email: 'nicolas@email.com', age: 43, country: 'Colombia'}
         ];
+        this.total = 222;
+
     }
 }
 
@@ -42,8 +79,8 @@ angular.module('meanApp')
             return Payment.get({id: model._id});
         };
 
-        this.findAll = function () {
-            return Payment.query();
+        this.findAll = function (cb) {
+            return Payment.query(cb);
         };
 
         this.new = function () {

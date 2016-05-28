@@ -9,6 +9,13 @@
             var split = lodash.split;
             var trim = lodash.trim;
 
+            function WarnFromScope(arr) {
+                if (arr.length <= 1) {
+                    // make sure u use vm, props.length === 0 is when u work on $scope
+                    $log.warn('not using vm');
+                }
+            }
+
             function splitByDot(string) { // todo spinner also has that func
                 return split(string, '.');
             }
@@ -27,19 +34,9 @@
             // method used in link function
             this.toggleStateOnObject = function(initialState, stringOfProps) {
                 var props = splitByDot(stringOfProps);
-                if (props.length <= 1) {
-                    // make sure u use vm, props.length === 0 is when u work on $scope
-                    $log.warn('not using vm');
-                }
+                WarnFromScope(props);
                 reduce(props, toggleBool, initialState);
             };
-
-            // method used in link function
-            // this.angularApplayUtilOnDom = function(object, attributes) {
-            //   object.$apply(function () {
-            //     toggleStateOnObject(object, attributes);
-            //   });
-            // }
         })
         .directive('toggleState', toggle);
 

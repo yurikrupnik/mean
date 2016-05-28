@@ -1,0 +1,13 @@
+<div class="text-center">
+    <uib-pagination
+        class="pagination-sm"
+        rotate="false"
+        boundary-links="true"
+        direction-links="true"
+        max-size="5"
+        total-items="ctrl.totalCount"
+        items-per-page="ctrl.itemsPerPage"
+        ng-model="ctrl.currentPage"
+        ng-change="ctrl.handleChange(ctrl.currentPage)">
+    </uib-pagination>
+</div>
