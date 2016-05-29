@@ -14,12 +14,12 @@
                 controller: function () {
                     var ctrl = this;
                     var isCallback = lodash.isFunction(ctrl.callback);
-                    
+console.log('ctrl.totalCount', ctrl.totalCount);
+
                     ctrl.handleChange = function (page) {
-                        isCallback ? ctrl.callback(page) : null;
+                        return isCallback ? ctrl.callback(page) : null;
                     };
-                    console.log('ctrl', ctrl);
-                    
+
                 },
                 controllerAs: 'ctrl',
                 bindToController: true
