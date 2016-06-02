@@ -8,7 +8,7 @@
                 $modalInstance.close('cancel');
             };
         })
-        .directive('qsonGrid', function () {
+        .directive('qsonGrid', function (pagingDropdownOptions) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/qson-grid/qson-grid.html',
@@ -18,7 +18,6 @@
                 },
                 controller: function () {
                     var ctrl = this;
-                    ctrl.itemsPerPage = 100;
                 },
                 controllerAs: 'ctrl',
                 bindToController: true

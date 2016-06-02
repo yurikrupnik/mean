@@ -1,4 +1,13 @@
-<div class="text-center">
+<div class="">
+    <div>
+        <ne-dropdown callback="ctrl.handleDropdownChange" model="ctrl.selected" items="ctrl.DROPDOWNOPTION" prop="value"></ne-dropdown>
+        <span>
+            records per page
+        </span>
+    </div>
+
+
+    <div>total count: {{ctrl.totalCount}}</div>
     <uib-pagination
         class="pagination-sm"
         rotate="false"
@@ -6,7 +15,7 @@
         direction-links="true"
         max-size="5"
         total-items="ctrl.totalCount"
-        items-per-page="ctrl.itemsPerPage"
+        items-per-page="ctrl.selected.value"
         ng-model="ctrl.currentPage"
         ng-change="ctrl.handleChange(ctrl.currentPage)">
     </uib-pagination>

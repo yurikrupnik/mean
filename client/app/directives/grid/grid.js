@@ -19,14 +19,7 @@
                     // set default grid options
                     ctrl.gridOptions = {
                         data: 'ctrl.data',
-                        columnDefs: [
-                            {field: 'id',    displayName: 'id'},
-                            // {field: 'ne_type',          displayName: 'Network Element', width: '130'},
-                            // {field: 'name',             displayName: 'Name',            width: '170'},
-                            // {field: 'change',           displayName: 'Change'},
-                            // {field: 'old_value',        displayName: 'From',            width: '60'},
-                            // {field: 'new_value',        displayName: 'To',              width: '60'}
-                        ]
+                        columnDefs: []
                         // onRegisterApi: function (gridApi) {
                         //
                         // },
@@ -44,10 +37,14 @@
                         // totalServerItems: 'totalServerItems',
                         // primaryKey: 'id'
                     };
+                    gridService.doWhatEverIWant();
+
+                    // if (ctrl.gridOptions.columnDefs.length===0) {
+                    //     lodash.assign(ctrl.gridOptions, ctrl.options || {} );
+                    //     console.warn('empty!!!!!!!!!!!'); // fix it
+                    // }
                     // over write default grid options using options
                     lodash.assign(ctrl.gridOptions, ctrl.options || {} );
-                    //
-                    gridService.doWhatEverIWant();
 
                 },
                 controllerAs: 'ctrl',

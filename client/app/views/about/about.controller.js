@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function AboutController(api) {
+    function AboutController(api, userActivitiesGridConfig) {
 
         var ctrl = this;
         function setGridDataAndCount(response) { // set to current ctrl.grid.gridData and count by binding this func
@@ -15,6 +15,8 @@
         }
 
         function setGridData(response) {
+            console.log('response', response);
+
             ctrl.grid.gridData = response;
             // return ctrl.grid.gridData = response;
         }
@@ -46,9 +48,9 @@
         getFullDataPageInit(ctrl);
         var itemsPerPage = 100; // todo make a directory with dropdown already built in
 
-        var options = { // use grid service for options
-            columnDefs: [{field: 'id', displayName: 'id'}, {field: 'name', displayName: 'name'}]
-        };
+        // options.columnDefs = [{field: 'id', displayName: 'id'}, {field: 'name', displayName: 'name'}];
+
+        var options = userActivitiesGridConfig;
 
         // this is how the ctrl of the grids should look like, the options,
         // api and methods all taken from services.. each grid with his own data manipulation and api
@@ -58,10 +60,18 @@
             methods: {}
         };
 
+
         ctrl.api = { // those 2 must be made for qson-grid to work proper
             getDataByPage: getDataByPage,
             csv: requestAllDataForCsv
         }
+        ctrl.items = [{displayName: 'Timestamp', field: 'timestamp'},
+            {displayName: 'Module name', field: 'object_type'},
+            {displayName: 'Change Type', field: 'operation'},
+            {displayName: 'Affected Objects', field: 'affected_objects'},
+            {displayName: 'User', field: 'user'},
+            {displayName: 'Comment', field: 'comment'}];
+        
 
     }
 
@@ -69,10 +79,10 @@
 
     angular.module('meanApp')
         .factory('GridConfigFactory', function () {
-            function GridConfigConstructor(title, colDefs, sortInfo) {
-                this.gridTitle = title || '';
-                this.colDefs = colDefs || [];
-                this.sortOptions = sortInfo || {};
+            function GridConfigConstructor(title, columnDefs, sortInfo) {
+                this.title = title || '';
+                this.columnDefs = columnDefs || [];
+                // this.sortOptions = sortInfo || {};
                 // this.enableDownloadCsv = true;
                 // this.autoLoad = true;
                 // this.useExternalSorting = sortInfo.useExternalSorting || false;
@@ -83,19 +93,18 @@
                 return new GridConfigConstructor(title, colDefs, sortOptions)
             }
         })
-        .factory('userActivitiesGridService', function (GridConfigFactory) {
+        .factory('userActivitiesGridConfig', function (GridConfigFactory) {
             var defaultColDefs = [
                 {displayName: 'id', field: 'id'},
-                {displayName: 'data_center', field: 'data_center'},
-                {displayName: 'object_type', field: 'object_type'}
+                {displayName: 'age', field: 'age'},
+                {displayName: 'gender', field: 'gender'}
             ];
-
             var parametersChanged = {
-                displayName: 'parameters',
+                displayName: 'par',
                 field: 'parameters',
                 sortable: true,
                 width: 55,
-                cellTemplate: '<div class="ngCellText"><a href="" ng-click="gMethods.openModal(row.entity);"><i class="fa fa-angle-double-left fa-2"></i></a></div>'
+                cellTemplate: '<div class="ngCellText"><a href="" ng-click="ctrl.grid.appScope.openModal(row.entity);"><span>{{ctrl}}</span><i class="fa fa-angle-double-left fa-2"></i></a></div>'
             };
 
             var sortOptions = {
@@ -103,9 +112,7 @@
                 directions: ['desc']
             };
 
-            return {
-                gridConfig: GridConfigFactory('User Activities', defaultColDefs.concat(parametersChanged), sortOptions)
-            };
+            return GridConfigFactory('User Activities', defaultColDefs.concat(parametersChanged), sortOptions)
 
         })
         .controller('AboutCtrl', AboutController)
