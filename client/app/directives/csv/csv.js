@@ -1,10 +1,18 @@
 (function () {
     angular.module('csv', ['ngCsv'])
         .service('csvService', function () {
-            this.doWhatEverIWant = function () {
-                console.log('lol');
+            var fileName = 'download';
 
+            function setFileName(a) {
+                fileName = a;
             }
+
+            function getFileName() {
+                return fileName;
+            }
+
+            this.setFileName = setFileName;
+            this.getFileName = getFileName
         })
         .directive('csv', function (lodash, csvService) {
             return {
@@ -16,15 +24,16 @@
                 controller: function () {
                     var ctrl = this;
                     var isCallback = lodash.isFunction(ctrl.callback);
+                    var callback = ctrl.callback;
 
                     ctrl.handleClick = function () {
-                        return isCallback ? ctrl.callback() : null;
+                        return isCallback ? callback() : null;
                     };
 
-                    ctrl.filename = 'what ever i want';
+                    ctrl.filename = csvService.getFileName(); // todo service control this
 
                 },
-                controllerAs: 'ctrl',
+                controllerAs: 'csv',
                 bindToController: true
             }
         });

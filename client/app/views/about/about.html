@@ -1,9 +1,36 @@
-
-
 <div class="about">
 
-    <ne-dropdown items="ctrl.items" model="ctrl.selectedI" prop="displayName"></ne-dropdown>
-    <qson-grid options="ctrl.grid" api="ctrl.api"></qson-grid>
+    <h3>Cross Feedersf</h3>
+    <div class="form-inline">
+        <div class="input-group">
+            <span class="input-group-addon">Start Date</span>
+            <input type="text"
+                   class="form-control input-sm"
+                   ng-model="ctrl.dates.start.date"
+                   is-open="ctrl.dates.start.isOpen"
+                   uib-datepicker-popup/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm" toggle-state="ctrl.dates.start.isOpen" ><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">End Date</span>
+            <input type="text"
+                   class="form-control input-sm"
+                   ng-model="ctrl.dates.end.date"
+                   is-open="ctrl.dates.end.isOpen"
+                   uib-datepicker-popup
+                   ng-required="true"
+                   min-date="ctrl.dates.start.date"
+                   max-date="ctrl.dates.end.maxDate"
+                   close-text="Close"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm" toggle-state="ctrl.dates.end.isOpen"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+        </div>
+    </div>
+
+    <qson-grid config="ctrl.grid"></qson-grid>
 </div>
 
 

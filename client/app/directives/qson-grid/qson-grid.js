@@ -1,26 +1,25 @@
 (function () {
-    angular.module('qson.grid', [])
-        .controller('somemodalctrl', function ($modalInstance, parameters) {
-            var ctrl = this;
-            ctrl.parameters = parameters;
+    "use strict";
+    
+    function qsonGridController() {
+        var ctrl = this;
 
-            ctrl.ok = function () {
-                $modalInstance.close('cancel');
-            };
-        })
-        .directive('qsonGrid', function (pagingDropdownOptions) {
-            return {
-                restrict: 'E',
-                templateUrl: 'app/directives/qson-grid/qson-grid.html',
-                scope: {
-                    options: '=',
-                    api: '<'
-                },
-                controller: function () {
-                    var ctrl = this;
-                },
-                controllerAs: 'ctrl',
-                bindToController: true
-            }
-        });
+    }
+
+    function qsonGridDirective() {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/directives/qson-grid/qson-grid.html',
+            scope: {
+                config: '='
+            },
+            controller: 'qsonGridController',
+            controllerAs: 'ctrl',
+            bindToController: true
+        }
+    }
+
+    angular.module('qson.grid', [])
+        .controller('qsonGridController', qsonGridController)
+        .directive('qsonGrid', qsonGridDirective);
 })();

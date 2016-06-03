@@ -8,9 +8,9 @@
             {value: 50, name: 50},
             {value: 100, name: 100}
         ])
-        .factory('pagingDropdownOptions', function (DROPDOWNOPTION) {
+        .factory('pagingDropdownOptions', function (lodash, DROPDOWNOPTION) {
 
-            var selected = DROPDOWNOPTION[1];
+            var selected = lodash.head(DROPDOWNOPTION);
 
             function setSelected(a) {
                 selected = a;
@@ -18,10 +18,6 @@
 
             function getSelected() {
                 return selected;
-            }
-
-            function getSelectedValue() {
-                return selected.value;
             }
 
             return {
@@ -35,17 +31,18 @@
                 templateUrl: 'app/directives/grid-pagination/grid-pagination.html',
                 scope: {
                     callback: '<',
-                    totalCount: '=' // todo set this to service
+                    totalCount: '='
                 },
                 controller: function () {
                     var ctrl = this;
                     var isCallback = lodash.isFunction(ctrl.callback);
+                    var callback = ctrl.callback;
 
                     ctrl.DROPDOWNOPTION = DROPDOWNOPTION;
 
                     ctrl.selected = pagingDropdownOptions.getSelected();
-                    ctrl.handleChange = function (page) {
-                        return isCallback ? ctrl.callback(page) : null;
+                    ctrl.handlePageChange = function (page) {
+                        return isCallback ? callback(page) : null;
                     };
 
                     ctrl.handleDropdownChange = function (item) {
@@ -54,10 +51,10 @@
 
 
                 },
-                controllerAs: 'ctrl',
+                controllerAs: 'pagination',
                 bindToController: true
             }
         });
-//
+
 })();
-//
+

@@ -1,10 +1,10 @@
 <div class="ne-grid">
-    <csv callback="ctrl.api.csv"></csv>
+    <csv callback="ctrl.config.api.csv"></csv>
 
-    <grid data="ctrl.options.gridData" options="ctrl.options.options"></grid>
+    <grid data="ctrl.config.gridData" options="ctrl.config.options" actions="ctrl.config.methods"></grid>
 
     <grid-pagination
-        total-count="ctrl.options.count"
-        callback="ctrl.api.getDataByPage">
+        total-count="ctrl.config.count"
+        callback="ctrl.config.api.getDataByPage">
     </grid-pagination>
 </div>

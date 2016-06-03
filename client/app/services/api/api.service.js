@@ -17,10 +17,17 @@
                 }
             }
 
-            this.getFullData = function () {
+            function handleRequestFailure(err) {
+                console.error('erroro', err);
+            }
+
+            this.getFullData = function (params) {
+                console.log('params', params);
+                
                 spinnerService.show();
                 return $http.get(url)
                     .then(splitDataToDataAndCount)
+                    .catch(handleRequestFailure)
                     .finally(spinnerHide);
             };
             this.getByPage = function (page) {
@@ -60,11 +67,11 @@
                         return filteredData;
 
                     })
+                    .catch(handleRequestFailure)
                     .finally(spinnerHide);
             };
 
 
-            // AngularJS will instantiate a singleton by calling "new" on this function
         });
 
 })();
