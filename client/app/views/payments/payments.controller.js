@@ -72,9 +72,9 @@
                 // this is the structure of the csv file
                 return {
                     Id: item.id,
-                    Age: item.age,
-                    Gender: item.gender,
-                    Guid: item.guid,
+                    Name: item.name,
+                    Picture: item.picture,
+                    Email: item.email,
                     Active: item.isActive
                 }
             })
@@ -99,7 +99,8 @@
             return api.getFullData(params).then(setGridDataAndCount.bind(scope)); // set
         }
 
-        csvService.setFileName('oss_changes');
+        csvService.setFileName('payment');
+        csvService.setCallback(requestAllDataForCsv);
 
         ctrl.grid = {
             options: userActivitiesGridConfig, // options of the grid

@@ -3,7 +3,6 @@
     
     function qsonGridController() {
         var ctrl = this;
-
     }
 
     function qsonGridDirective() {

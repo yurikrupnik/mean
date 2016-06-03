@@ -1,7 +1,8 @@
 (function () {
     angular.module('csv', ['ngCsv'])
-        .service('csvService', function () {
+        .service('csvService', function (lodash) {
             var fileName = 'download';
+            var callback = function () {};
 
             function setFileName(a) {
                 fileName = a;
@@ -11,30 +12,40 @@
                 return fileName;
             }
 
+            function setCallback(fn) {
+                var isCallback = lodash.isFunction(fn);
+                callback = isCallback ? fn : function () {};
+            }
+
+            function getCallback() {
+                return callback();
+            }
+
             this.setFileName = setFileName;
-            this.getFileName = getFileName
+            this.getFileName = getFileName;
+            this.setCallback = setCallback;
+            this.getCallback = getCallback;
         })
-        .directive('csv', function (lodash, csvService) {
+        .directive('csv', function (csvService) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/csv/csv.html',
-                scope: {
-                    callback: '<'
-                },
                 controller: function () {
                     var ctrl = this;
-                    var isCallback = lodash.isFunction(ctrl.callback);
-                    var callback = ctrl.callback;
 
                     ctrl.handleClick = function () {
-                        return isCallback ? callback() : null;
+                        return csvService.getCallback();
                     };
 
-                    ctrl.filename = csvService.getFileName(); // todo service control this
-
+                    ctrl.filename = csvService.getFileName(); // set the name in controller
                 },
                 controllerAs: 'csv',
-                bindToController: true
+                bindToController: true,
+                compile: function (tElement, tAttrs) {
+                    return function (scope) {
+
+                    }
+                }
             }
         });
 })();

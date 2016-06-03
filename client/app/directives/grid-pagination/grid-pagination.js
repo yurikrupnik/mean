@@ -25,24 +25,54 @@
                 setSelected: setSelected
             }
         })
-        .directive('gridPagination', function (lodash, DROPDOWNOPTION, pagingDropdownOptions) {
+        .service('paginationService', function (lodash) {
+            var totalCount = 0;
+            var callback = function () {};
+
+            function setTotalCount(val) {
+                totalCount = val;
+            }
+
+            function getTotalCount() {
+                return totalCount;
+            }
+
+            function setCallback(fn) {
+                var isCallback = lodash.isFunction(fn);
+                callback = isCallback ? fn : function () {};
+            }
+
+            function getCallback(page) {
+                return callback(page);
+            }
+
+            this.getTotalCount = getTotalCount;
+            this.setTotalCount = setTotalCount;
+            this.setCallback = setCallback;
+            this.getCallback = getCallback;
+
+        })
+        .directive('gridPagination', function (lodash, DROPDOWNOPTION, pagingDropdownOptions, paginationService) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/grid-pagination/grid-pagination.html',
-                scope: {
-                    callback: '<',
-                    totalCount: '='
-                },
+                scope: true,
                 controller: function () {
                     var ctrl = this;
-                    var isCallback = lodash.isFunction(ctrl.callback);
-                    var callback = ctrl.callback;
+
+                    // service
+                    // var isCallback = lodash.isFunction(ctrl.callback);
+                    // var callback = ctrl.callback;
+
+                    ctrl.totalCount = paginationService.getTotalCount();
 
                     ctrl.DROPDOWNOPTION = DROPDOWNOPTION;
 
                     ctrl.selected = pagingDropdownOptions.getSelected();
+
                     ctrl.handlePageChange = function (page) {
-                        return isCallback ? callback(page) : null;
+                        debugger;
+                        return paginationService.getCallback(page);
                     };
 
                     ctrl.handleDropdownChange = function (item) {
