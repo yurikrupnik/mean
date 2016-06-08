@@ -41,11 +41,7 @@
                 },
                 controllerAs: 'csv',
                 bindToController: true,
-                compile: function (tElement, tAttrs) {
-                    return function (scope) {
-
-                    }
-                }
+                scope: true
             }
         });
 })();

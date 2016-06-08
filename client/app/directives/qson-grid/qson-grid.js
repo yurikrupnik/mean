@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    
+
     function qsonGridController() {
         var ctrl = this;
     }
@@ -10,15 +10,14 @@
             restrict: 'E',
             templateUrl: 'app/directives/qson-grid/qson-grid.html',
             scope: {
-                config: '='
+                gridData: '='
             },
-            controller: 'qsonGridController',
+            controller: qsonGridController,
             controllerAs: 'ctrl',
             bindToController: true
         }
     }
 
     angular.module('qson.grid', [])
-        .controller('qsonGridController', qsonGridController)
         .directive('qsonGrid', qsonGridDirective);
 })();

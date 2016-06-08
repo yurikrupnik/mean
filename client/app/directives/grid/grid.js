@@ -31,12 +31,7 @@
         // over write default grid options using options - todo fix first time page loads ctrl.options is empty
 
 
-        lodash.assign(ctrl.gridOptions, ctrl.options || {});
-
-        // var data = gridService.getData();
-        // if (data) {
-        ctrl.data = gridService.getData();
-        // }
+        lodash.assign(ctrl.gridOptions, gridService.getConfig() || {});
 
     }
 
@@ -45,46 +40,38 @@
             restrict: 'E',
             templateUrl: 'app/directives/grid/grid.html',
             scope: {
-                // data: '=',
-                // options: '=',
-                // actions: '<'
+                data: '='
             },
             controller: 'gridController',
             controllerAs: 'ctrl',
-            bindToController: true,
-            link: function (scope, element, attrs) {
-                // if (!scope.ctrl.options) {
-                //     console.warn('no ctrl.options');
-                //     // scope.$apply();
-                // }
-
-            }
+            bindToController: true
+            // link: function (scope, element, attrs) {
+            //     var ctrl = scope.ctrl;
+            //     // ctrl.data = gridService.getData();
+            //     // if (!scope.ctrl.options) {
+            //     //     console.warn('no ctrl.options');
+            //     //     // scope.$apply();
+            //     // }
+            //
+            // }
         }
     }
 
     angular.module('grid', ['ui.grid', 'ngLodash'])
-        .service('gridService', function ($timeout) {
-            var data = null;
-            // var options =
+        .service('gridService', function (lodash) {
+            var config = {};
 
-            function getData() {
-                if (data) {
-                    return data;
-                } else {
 
-                    // debugger; // todo fix this
-                    $timeout(function () {
-                        // setData(getData());
-                    }, 1000);
-                }
+            function getConfig() {
+                return config;
             }
 
-            function setData(a) {
-                data = a;
+            function setConfig(a) {
+                config = lodash.isObject(a) ? a : {};
             }
 
-            this.getData = getData;
-            this.setData = setData;
+            this.setConfig = setConfig;
+            this.getConfig = getConfig;
         })
 
         .controller('gridController', gridController)

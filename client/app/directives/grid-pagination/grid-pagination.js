@@ -39,7 +39,7 @@
 
             function setCallback(fn) {
                 var isCallback = lodash.isFunction(fn);
-                callback = isCallback ? fn : function () {};
+                return callback = isCallback ? fn : function () {};
             }
 
             function getCallback(page) {
@@ -60,18 +60,14 @@
                 controller: function () {
                     var ctrl = this;
 
-                    // service
-                    // var isCallback = lodash.isFunction(ctrl.callback);
-                    // var callback = ctrl.callback;
-
                     ctrl.totalCount = paginationService.getTotalCount();
 
                     ctrl.DROPDOWNOPTION = DROPDOWNOPTION;
 
                     ctrl.selected = pagingDropdownOptions.getSelected();
 
-                    ctrl.handlePageChange = function (page) {
-                        debugger;
+                    ctrl.handlePageChange = function (page) { // fix this
+                        console.log('page', page);
                         return paginationService.getCallback(page);
                     };
 

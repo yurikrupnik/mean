@@ -5,6 +5,9 @@ angular.module('meanApp')
         $stateProvider
             .state('about', {
                 url: '/about',
-                template: '<about></about>'
+                templateUrl: 'app/views/about/about.html',
+                controller: 'AboutCtrl',
+                controllerAs: 'ctrl',
+                bindToController: true
             });
     });

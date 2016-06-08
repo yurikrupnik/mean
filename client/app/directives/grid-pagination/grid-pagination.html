@@ -1,6 +1,6 @@
 <div class="">
     <div>
-        <ne-dropdown callback="pagination.handleDropdownChange" model="pagination.selected" items="pagination.DROPDOWNOPTION" prop="value"></ne-dropdown>
+        <ne-dropdown class="" callback="pagination.handleDropdownChange" model="pagination.selected" items="pagination.DROPDOWNOPTION" prop="value"></ne-dropdown>
         <span>
             records per page
         </span>
@@ -16,9 +16,7 @@
         max-size="5"
         total-items="pagination.totalCount"
         items-per-page="pagination.selected.value"
-        ng-model="pagina
-
-        tion.currentPage"
+        ng-model="pagination.currentPage"
         ng-change="pagination.handlePageChange(pagination.currentPage)">
     </uib-pagination>
 </div>
