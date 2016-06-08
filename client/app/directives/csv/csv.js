@@ -1,31 +1,47 @@
 (function () {
     angular.module('csv', ['ngCsv'])
-        .service('csvService', function () {
-            this.doWhatEverIWant = function () {
-                console.log('lol');
+        .service('csvService', function (lodash) {
+            var fileName = 'download';
+            var callback = function () {};
 
+            function setFileName(a) {
+                fileName = a;
             }
+
+            function getFileName() {
+                return fileName;
+            }
+
+            function setCallback(fn) {
+                var isCallback = lodash.isFunction(fn);
+                callback = isCallback ? fn : function () {};
+            }
+
+            function getCallback() {
+                return callback();
+            }
+
+            this.setFileName = setFileName;
+            this.getFileName = getFileName;
+            this.setCallback = setCallback;
+            this.getCallback = getCallback;
         })
-        .directive('csv', function (lodash, csvService) {
+        .directive('csv', function (csvService) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/csv/csv.html',
-                scope: {
-                    callback: '<'
-                },
                 controller: function () {
                     var ctrl = this;
-                    var isCallback = lodash.isFunction(ctrl.callback);
 
                     ctrl.handleClick = function () {
-                        return isCallback ? ctrl.callback() : null;
+                        return csvService.getCallback();
                     };
 
-                    ctrl.filename = 'what ever i want';
-
+                    ctrl.filename = csvService.getFileName(); // set the name in controller
                 },
-                controllerAs: 'ctrl',
-                bindToController: true
+                controllerAs: 'csv',
+                bindToController: true,
+                scope: true
             }
         });
 })();

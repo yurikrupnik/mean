@@ -1,27 +1,23 @@
 (function () {
-    angular.module('qson.grid', [])
-        .controller('somemodalctrl', function ($modalInstance, parameters) {
-            var ctrl = this;
-            ctrl.parameters = parameters;
+    "use strict";
 
-            ctrl.ok = function () {
-                $modalInstance.close('cancel');
-            };
-        })
-        .directive('qsonGrid', function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'app/directives/qson-grid/qson-grid.html',
-                scope: {
-                    options: '=',
-                    api: '<'
-                },
-                controller: function () {
-                    var ctrl = this;
-                    ctrl.itemsPerPage = 100;
-                },
-                controllerAs: 'ctrl',
-                bindToController: true
-            }
-        });
+    function qsonGridController() {
+        var ctrl = this;
+    }
+
+    function qsonGridDirective() {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/directives/qson-grid/qson-grid.html',
+            scope: {
+                gridData: '='
+            },
+            controller: qsonGridController,
+            controllerAs: 'ctrl',
+            bindToController: true
+        }
+    }
+
+    angular.module('qson.grid', [])
+        .directive('qsonGrid', qsonGridDirective);
 })();

@@ -1,11 +1,7 @@
 <div class="ne-grid">
-    <csv callback="ctrl.api.csv"></csv>
+    <csv></csv>
 
-    <grid data="ctrl.options.gridData" options="ctrl.options.options"></grid>
+    <grid data="ctrl.gridData"></grid>
 
-    <grid-pagination
-        total-count="ctrl.options.count"
-        callback="ctrl.api.getDataByPage"
-        items-per-page="ctrl.itemsPerPage">
-    </grid-pagination>
+    <grid-pagination></grid-pagination>
 </div>

@@ -2,29 +2,85 @@
     "use strict";
 
     angular.module('gridPagination', ['ui.bootstrap'])
-        .directive('gridPagination', function (lodash) {
+        .value('DROPDOWNOPTION', [
+            {value: 0, name: 0},
+            {value: 25, name: 25},
+            {value: 50, name: 50},
+            {value: 100, name: 100}
+        ])
+        .factory('pagingDropdownOptions', function (lodash, DROPDOWNOPTION) {
+
+            var selected = lodash.head(DROPDOWNOPTION);
+
+            function setSelected(a) {
+                selected = a;
+            }
+
+            function getSelected() {
+                return selected;
+            }
+
+            return {
+                getSelected: getSelected,
+                setSelected: setSelected
+            }
+        })
+        .service('paginationService', function (lodash) {
+            var totalCount = 0;
+            var callback = function () {};
+
+            function setTotalCount(val) {
+                totalCount = val;
+            }
+
+            function getTotalCount() {
+                return totalCount;
+            }
+
+            function setCallback(fn) {
+                var isCallback = lodash.isFunction(fn);
+                return callback = isCallback ? fn : function () {};
+            }
+
+            function getCallback(page) {
+                return callback(page);
+            }
+
+            this.getTotalCount = getTotalCount;
+            this.setTotalCount = setTotalCount;
+            this.setCallback = setCallback;
+            this.getCallback = getCallback;
+
+        })
+        .directive('gridPagination', function (lodash, DROPDOWNOPTION, pagingDropdownOptions, paginationService) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/grid-pagination/grid-pagination.html',
-                scope: {
-                    callback: '<',
-                    totalCount: '=',
-                    itemsPerPage: '='
-                },
+                scope: true,
                 controller: function () {
                     var ctrl = this;
-                    var isCallback = lodash.isFunction(ctrl.callback);
-console.log('ctrl.totalCount', ctrl.totalCount);
 
-                    ctrl.handleChange = function (page) {
-                        return isCallback ? ctrl.callback(page) : null;
+                    ctrl.totalCount = paginationService.getTotalCount();
+
+                    ctrl.DROPDOWNOPTION = DROPDOWNOPTION;
+
+                    ctrl.selected = pagingDropdownOptions.getSelected();
+
+                    ctrl.handlePageChange = function (page) { // fix this
+                        console.log('page', page);
+                        return paginationService.getCallback(page);
                     };
 
+                    ctrl.handleDropdownChange = function (item) {
+                        pagingDropdownOptions.setSelected(item);
+                    }
+
+
                 },
-                controllerAs: 'ctrl',
+                controllerAs: 'pagination',
                 bindToController: true
             }
         });
-//
+
 })();
-//
+

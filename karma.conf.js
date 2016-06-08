@@ -25,6 +25,7 @@ module.exports = function(config) {
       'client/bower_components/angular-ui-select/dist/select.js',
       'client/bower_components/angular-ui-grid/ui-grid.js',
       'client/bower_components/ng-csv/build/ng-csv.min.js',
+      'client/bower_components/moment/moment.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'node_modules/socket.io-client/socket.io.js',

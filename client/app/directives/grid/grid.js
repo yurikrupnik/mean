@@ -1,57 +1,79 @@
 (function () {
+    "use strict";
+
+    function gridController($scope, lodash, gridService, $timeout) {
+        var ctrl = this;
+        // set default grid options
+        ctrl.gridOptions = {
+            data: 'ctrl.data',
+            columnDefs: []
+            // onRegisterApi: function (gridApi) {
+            //
+            // },
+            // // gridMenuTitleFilter:        toggleColumnInterval,
+            // enableColumnMenus: false,
+            // enableFiltering: false,
+            // enableGridMenu: true,
+            // enableSelectAll: true,
+            // // enableRowSelection:         $scope.neOptions.enableSelection,
+            // enableRowHeaderSelection: false,
+            // showSelectionCheckbox: false,
+            // enableColumnResizing: true,
+            // // pagingOptions:              $scope.pagingOptions,
+            // // sortInfo:                   $scope.sortOptions,
+            // totalServerItems: 'totalServerItems',
+            // primaryKey: 'id'
+        };
+
+
+        // ctrl.methods = ctrl.actions; // for some reason actions are not binded to methods
+
+        // over write default grid options using options - todo fix first time page loads ctrl.options is empty
+
+
+        lodash.assign(ctrl.gridOptions, gridService.getConfig() || {});
+
+    }
+
+    function gridDirective() {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/directives/grid/grid.html',
+            scope: {
+                data: '='
+            },
+            controller: 'gridController',
+            controllerAs: 'ctrl',
+            bindToController: true
+            // link: function (scope, element, attrs) {
+            //     var ctrl = scope.ctrl;
+            //     // ctrl.data = gridService.getData();
+            //     // if (!scope.ctrl.options) {
+            //     //     console.warn('no ctrl.options');
+            //     //     // scope.$apply();
+            //     // }
+            //
+            // }
+        }
+    }
+
     angular.module('grid', ['ui.grid', 'ngLodash'])
-        .service('gridService', function () {
-            this.doWhatEverIWant = function () {
-                console.log('lol');
+        .service('gridService', function (lodash) {
+            var config = {};
 
+
+            function getConfig() {
+                return config;
             }
+
+            function setConfig(a) {
+                config = lodash.isObject(a) ? a : {};
+            }
+
+            this.setConfig = setConfig;
+            this.getConfig = getConfig;
         })
-        .directive('grid', function (lodash, gridService) {
-            return {
-                restrict: 'E',
-                templateUrl: 'app/directives/grid/grid.html',
-                scope: {
-                    data: '=',
-                    options: '='
-                },
-                controller: function () {
-                    var ctrl = this;
-                    // set default grid options
-                    ctrl.gridOptions = {
-                        data: 'ctrl.data',
-                        columnDefs: [
-                            {field: 'id',    displayName: 'id'},
-                            // {field: 'ne_type',          displayName: 'Network Element', width: '130'},
-                            // {field: 'name',             displayName: 'Name',            width: '170'},
-                            // {field: 'change',           displayName: 'Change'},
-                            // {field: 'old_value',        displayName: 'From',            width: '60'},
-                            // {field: 'new_value',        displayName: 'To',              width: '60'}
-                        ]
-                        // onRegisterApi: function (gridApi) {
-                        //
-                        // },
-                        // // gridMenuTitleFilter:        toggleColumnInterval,
-                        // enableColumnMenus: false,
-                        // enableFiltering: false,
-                        // enableGridMenu: true,
-                        // enableSelectAll: true,
-                        // // enableRowSelection:         $scope.neOptions.enableSelection,
-                        // enableRowHeaderSelection: false,
-                        // showSelectionCheckbox: false,
-                        // enableColumnResizing: true,
-                        // // pagingOptions:              $scope.pagingOptions,
-                        // // sortInfo:                   $scope.sortOptions,
-                        // totalServerItems: 'totalServerItems',
-                        // primaryKey: 'id'
-                    };
-                    // over write default grid options using options
-                    lodash.assign(ctrl.gridOptions, ctrl.options || {} );
-                    //
-                    gridService.doWhatEverIWant();
 
-                },
-                controllerAs: 'ctrl',
-                bindToController: true
-            }
-        });
+        .controller('gridController', gridController)
+        .directive('grid', gridDirective);
 })();
