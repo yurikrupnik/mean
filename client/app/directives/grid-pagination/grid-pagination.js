@@ -3,10 +3,10 @@
 
     angular.module('gridPagination', ['ui.bootstrap'])
         .value('DROPDOWNOPTION', [
-            {value: 0, name: 0},
             {value: 25, name: 25},
             {value: 50, name: 50},
-            {value: 100, name: 100}
+            {value: 100, name: 100},
+            {value: 150, name: 150}
         ])
         .factory('pagingDropdownOptions', function (lodash, DROPDOWNOPTION) {
 
@@ -67,7 +67,6 @@
                     ctrl.selected = pagingDropdownOptions.getSelected();
 
                     ctrl.handlePageChange = function (page) { // fix this
-                        console.log('page', page);
                         return paginationService.getCallback(page);
                     };
 
