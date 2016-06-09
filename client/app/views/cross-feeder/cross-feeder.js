@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanApp')
-    .service('crossFeederApi', function ($http, spinnerService, gridService) {
+    .service('crossFeederApi', function ($http, spinnerService) {
         var url = 'https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json';
 
         function spinnerHide() {
@@ -23,6 +23,7 @@ angular.module('meanApp')
         function returnGridData(response) {
             return response.data;
         }
+
         function requestAllDataForCsv() { // we just return data to create the csv, can manipulate first ofc
             spinnerService.show();
             return $http.get(url)
@@ -90,27 +91,42 @@ angular.module('meanApp')
             include_total: true
         }
     })
-    .controller('CrossFeederCtrl', function (gridData, crossFeederApi, paginationService) {
+    .controller('CrossFeederCtrl', function (gridData, crossFeederApi, paginationService, $state) {
         var ctrl = this;
-
         // init by resolve
         ctrl.gridData = gridData;
 
         function getByPage(page) {
             return crossFeederApi.getByPage(page)
-                .then(function (data) {
-                    ctrl.gridData = data;
-                })
+                .then(function (response) {
+                    ctrl.gridData = response;
+                });
         }
+
         paginationService.setCallback(getByPage);
 
+        // passing methods to grid controller
         ctrl.methods = {
-            someFuck: function (item) {
+            someFunc: function (item) {
                 console.log('item', item);
-
+            },
+            goToPayments: function () {
+                $state.go('payments');
             }
-        }
+        };
 
+
+        ctrl.dates = {
+            start: {
+                date: new Date(), //  moment().subtract(1, 'days').format('YYYY-MM-DD'), // set start date to yesterday
+                isOpen: false
+            },
+            end: {
+                date: new Date(),
+                isOpen: false,
+                maxDate: moment().format('YYYY-MM-DD')
+            }
+        };
     })
     .factory('crossFeederGridConfig', function (GridConfigFactory) {
         var defaultColDefs = [
@@ -123,15 +139,21 @@ angular.module('meanApp')
             field: 'parameters',
             sortable: true,
             width: 55,
-            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.someFuck(row.entity)">{{grid.appScope|json}} me</a></div>'
+            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.someFunc(row.entity)">{{grid.appScope|json}} me</a></div>'
         };
-
+        var payments = {
+            displayName: 'payments',
+            field: 'payments',
+            sortable: true,
+            width: 55,
+            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.goToPayments(row.entity)">{{grid.appScope|json}} me</a></div>'
+        };
         var sortOptions = {
             fields: ['created_on'],
             directions: ['desc']
         };
 
-        return GridConfigFactory('User Activities', defaultColDefs.concat(parametersChanged), sortOptions)
+        return GridConfigFactory('User Activities', defaultColDefs.concat(parametersChanged, payments), sortOptions);
 
     })
     .config(function ($stateProvider) {
@@ -142,7 +164,7 @@ angular.module('meanApp')
                 controller: 'CrossFeederCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    gridData: function (crossFeederApi, crossFeederParams, gridService, paginationService, csvService, crossFeederGridConfig) {
+                    gridData: function (crossFeederApi, crossFeederParams, gridService, crossFeederGridConfig, paginationService, csvService) {
                         return crossFeederApi.getFullData(crossFeederParams)
                             .then(function (response) {
                                 gridService.setConfig(crossFeederGridConfig);
@@ -150,9 +172,11 @@ angular.module('meanApp')
                                 csvService.setCallback(crossFeederApi.requestAllDataForCsv);
                                 csvService.setFileName('cross_feeder_report');
                                 // get with page 1 for init the view
-                                return crossFeederApi.getByPage(1).then(function (response) {
-                                    return response;
-                                });
+                                // return new promise, just for show
+                                return crossFeederApi.getByPage(1)
+                                    .then(function (response) {
+                                        return response;
+                                    });
                             });
                     }
                 }

@@ -1,11 +1,12 @@
 (function () {
     "use strict";
 
-    function gridController($scope, lodash, gridService, $timeout) {
+    function gridController(lodash, gridService) {
         var ctrl = this;
         // set default grid options
         ctrl.gridOptions = {
             data: 'ctrl.data',
+            methods: 'ctrl.methods',
             columnDefs: []
             // onRegisterApi: function (gridApi) {
             //
@@ -28,9 +29,7 @@
 
         // ctrl.methods = ctrl.actions; // for some reason actions are not binded to methods
 
-        // over write default grid options using options - todo fix first time page loads ctrl.options is empty
-
-
+        // over write default grid options using options
         lodash.assign(ctrl.gridOptions, gridService.getConfig() || {});
 
     }
@@ -40,20 +39,12 @@
             restrict: 'E',
             templateUrl: 'app/directives/grid/grid.html',
             scope: {
-                data: '='
+                data: '=',
+                methods: '<'
             },
             controller: 'gridController',
             controllerAs: 'ctrl',
             bindToController: true
-            // link: function (scope, element, attrs) {
-            //     var ctrl = scope.ctrl;
-            //     // ctrl.data = gridService.getData();
-            //     // if (!scope.ctrl.options) {
-            //     //     console.warn('no ctrl.options');
-            //     //     // scope.$apply();
-            //     // }
-            //
-            // }
         }
     }
 
