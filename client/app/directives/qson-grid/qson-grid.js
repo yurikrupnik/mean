@@ -10,7 +10,8 @@
             restrict: 'E',
             templateUrl: 'app/directives/qson-grid/qson-grid.html',
             scope: {
-                gridData: '='
+                gridData: '=',
+                methods: '<'
             },
             controller: qsonGridController,
             controllerAs: 'ctrl',
