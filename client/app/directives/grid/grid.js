@@ -6,7 +6,6 @@
         // set default grid options
         ctrl.gridOptions = {
             data: 'ctrl.data',
-            methods: 'ctrl.methods',
             columnDefs: []
             // onRegisterApi: function (gridApi) {
             //
@@ -25,9 +24,6 @@
             // totalServerItems: 'totalServerItems',
             // primaryKey: 'id'
         };
-
-
-        // ctrl.methods = ctrl.actions; // for some reason actions are not binded to methods
 
         // over write default grid options using options
         lodash.assign(ctrl.gridOptions, gridService.getConfig() || {});

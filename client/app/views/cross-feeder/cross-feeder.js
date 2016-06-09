@@ -1,7 +1,47 @@
 'use strict';
 
 angular.module('meanApp')
-    .service('crossFeederApi', function ($http, spinnerService) {
+    .factory('crossFeederParams', function () {
+        return {
+            query: '',
+            cell_fields: ['location'],
+            page: 0,
+            page_size: -1,
+            // start_time: startDate,
+            // end_time: endDate,
+            order: ['-timestamp'],
+            include_total: true
+        }
+    })
+    .factory('crossFeederGridConfig', function (GridConfigFactory) {
+        var defaultColDefs = [
+            {displayName: 'id', field: 'id'},
+            {displayName: 'age', field: 'age'},
+            {displayName: 'gender', field: 'gender'}
+        ];
+        var parametersChanged = {
+            displayName: 'par',
+            field: 'parameters',
+            sortable: true,
+            width: 55,
+            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.someFunc(row.entity)">{{grid.appScope|json}} me</a></div>'
+        };
+        var payments = {
+            displayName: 'payments',
+            field: 'payments',
+            sortable: true,
+            width: 55,
+            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.goToPayments(row.entity)">{{grid.appScope|json}} me</a></div>'
+        };
+        var sortOptions = {
+            fields: ['created_on'],
+            directions: ['desc']
+        };
+
+        return GridConfigFactory('Cross Feeders', defaultColDefs.concat(parametersChanged, payments), sortOptions);
+
+    })
+    .service('crossFeederApi', function ($http, spinnerService, lodash) {
         var url = 'https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json';
 
         function spinnerHide() {
@@ -29,6 +69,17 @@ angular.module('meanApp')
             return $http.get(url)
                 .then(splitDataToDataAndCount)
                 .then(returnGridData)
+                .then(function (response) {
+                    return lodash.map(response, function (val) {
+                        return {
+                            'Id': val.id, // can not do ID
+                            Age: val.age,
+                            City: val.address.city,
+                            Email: val.email,
+                            Friends: val.friends[0].name
+                        };
+                    })
+                })
                 .catch(handleRequestFailure)
                 .finally(spinnerHide);
         }
@@ -75,6 +126,8 @@ angular.module('meanApp')
         }
 
         this.getFullData = function (params) {
+            console.log('params', params);
+
             spinnerService.show();
             return $http.get(url)
                 .then(splitDataToDataAndCount)
@@ -84,12 +137,6 @@ angular.module('meanApp')
         this.getByPage = getByPage;
         this.requestAllDataForCsv = requestAllDataForCsv;
 
-    })
-    .factory('crossFeederParams', function () {
-        return {
-            page: 1,
-            include_total: true
-        }
     })
     .controller('CrossFeederCtrl', function (gridData, crossFeederApi, paginationService, $state) {
         var ctrl = this;
@@ -128,34 +175,6 @@ angular.module('meanApp')
             }
         };
     })
-    .factory('crossFeederGridConfig', function (GridConfigFactory) {
-        var defaultColDefs = [
-            {displayName: 'id', field: 'id'},
-            {displayName: 'age', field: 'age'},
-            {displayName: 'gender', field: 'gender'}
-        ];
-        var parametersChanged = {
-            displayName: 'par',
-            field: 'parameters',
-            sortable: true,
-            width: 55,
-            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.someFunc(row.entity)">{{grid.appScope|json}} me</a></div>'
-        };
-        var payments = {
-            displayName: 'payments',
-            field: 'payments',
-            sortable: true,
-            width: 55,
-            cellTemplate: '<div class="ngCellText"><a href="" ng-click="grid.appScope.ctrl.methods.goToPayments(row.entity)">{{grid.appScope|json}} me</a></div>'
-        };
-        var sortOptions = {
-            fields: ['created_on'],
-            directions: ['desc']
-        };
-
-        return GridConfigFactory('User Activities', defaultColDefs.concat(parametersChanged, payments), sortOptions);
-
-    })
     .config(function ($stateProvider) {
         $stateProvider
             .state('cross-feeder', {
@@ -164,13 +183,14 @@ angular.module('meanApp')
                 controller: 'CrossFeederCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    gridData: function (crossFeederApi, crossFeederParams, gridService, crossFeederGridConfig, paginationService, csvService) {
+                    gridData: function (crossFeederApi, crossFeederParams, gridService, crossFeederGridConfig, paginationService, csvService, qsonGridService) {
                         return crossFeederApi.getFullData(crossFeederParams)
                             .then(function (response) {
+                                qsonGridService.setName(crossFeederGridConfig.title);
                                 gridService.setConfig(crossFeederGridConfig);
                                 paginationService.setTotalCount(response.count);
                                 csvService.setCallback(crossFeederApi.requestAllDataForCsv);
-                                csvService.setFileName('cross_feeder_report');
+                                csvService.setFileName('cross_feederr');
                                 // get with page 1 for init the view
                                 // return new promise, just for show
                                 return crossFeederApi.getByPage(1)
