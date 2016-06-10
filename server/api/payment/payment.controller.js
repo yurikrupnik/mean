@@ -64,59 +64,41 @@ function respondWithCount(res, statusCode) {
     statusCode = statusCode || 200;
     return function (entity) {
         if (entity) {
-            res.status(statusCode).json({count: entity});
+            res.status(statusCode).json(entity);
         }
     };
 }
 
+
+// Gets a list of Payments = Count
 export function count(req, res) {
-    console.log('req', req);
-
     return Payment.find().count().exec()
-        .then(respondWithCount(res))
-        .catch(handleError(res));
-}
-
-
-// Gets a list of Payments
-export function index(req, res) {
-    let {limit, include_total, page} = req.query;
-    // limit(0) = gets all
-
-    return Payment.find().limit(Number(limit)).exec()
-        .then(function (response) {
-            console.log('res', res);
-            console.log('response', response);
-
-            console.log('include_total', include_total);
-
-            if (include_total === 'true') {
-                return Payment.find().count().exec()
-                    .then(function (res) {
-                        return {
-                            count: res,
-                            data: response
-                        };
-                    });
-            } else {
-                // return null;
-                return {
-                    data: response
-                };
-                // return responseWithResult(res);
-            }
+        .then(response => {
+            return {count: response};
         })
-    //
-    // )
         .then(respondWithResult(res))
-        // .then()
         .catch(handleError(res));
 }
 
 // Gets a single Payment from the DB
 export function show(req, res) {
-    return Payment.findById(req.params.id).exec()
-        .then(handleEntityNotFound(res))
+    // let {page, limit, total} = req.query;
+    // // limit(0) = gets all
+    //
+    //
+    // let currentPage = Number(page);
+    // let max = Number(limit);
+    // let count = Number(total);
+    // let start = 0; // todo find this
+    // let end = 1+max;
+
+    // let quert= req.query;
+    return Payment.find({index: { $gt: 0, $lt: 200 } }).exec()
+        .then(function (response) {
+            return {
+                data: response
+            };
+        })
         .then(respondWithResult(res))
         .catch(handleError(res));
 }

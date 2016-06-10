@@ -1,25 +1,42 @@
 'use strict';
 
 angular.module('meanApp')
-    .factory('paymentsParams', function () {
-        return {
+    .factory('paymentsParams', function (lodash) {
+
+        function setParams(a) {
+            params = lodash.assign(params, a);
+        }
+
+        function getParams() {
+            return params;
+        }
+
+        var params = {
             page: 1,
+            // page_size: -1,
             limit: 1000,
-            include_total: true
+            // include_total: false,
+            total: 0
             // query: '',
             // cell_fields: ['location'],
             // page: 0,
-            // page_size: -1,
             // // start_time: startDate,
             // // end_time: endDate,
             // order: ['-timestamp'],
-        }
+        };
+
+
+        return {
+            getParams: getParams,
+            setParams: setParams
+        };
+
     })
     .factory('paymentsGridConfig', function (GridConfigFactory) {
         var defaultColDefs = [
             {displayName: 'id', field: 'id'},
-            {displayName: 'age', field: 'age'},
-            {displayName: 'gender', field: 'gender'}
+            {displayName: 'index', field: 'index'},
+            {displayName: 'name', field: 'name'}
         ];
         var parametersChanged = {
             displayName: 'par',
@@ -40,7 +57,7 @@ angular.module('meanApp')
             directions: ['desc']
         };
 
-        return GridConfigFactory('Cross Feeders', defaultColDefs.concat(parametersChanged, payments), sortOptions);
+        return GridConfigFactory('Payments', defaultColDefs.concat(parametersChanged, payments), sortOptions);
 
     })
     .factory('paymentsApi', function ($resource, spinnerService, paymentsParams) {
@@ -51,45 +68,37 @@ angular.module('meanApp')
         };
         var actions = {
             get: {
-            //     method: 'GET',
-            //     isArray: false
+                method: 'GET',
+                isArray: false
             },
             post: {
-                // method: 'POST',
-                // isArray: false
+                method: 'POST',
+                isArray: false
             }
         };
 
         var Payment = $resource(url, defaultParams, actions);
 
-
-        function getAll() {
-            return Payment.get(paymentsParams).$promise;
-        }
-
         function getCount() {
-            return Payment.post(paymentsParams).$promise;
+            return Payment.get().$promise;
         }
 
-        function getByPage() {
-
+        function getByPage(page) {
+            var params = paymentsParams.getParams();
+            params.page = page;
+            return Payment.post(params).$promise;
         }
+
+        function csv() {
+            // todo
+            return Payment.post(params).$promise;
+        }
+
         return {
-            getAll: getAll,
             getCount: getCount,
-            getByPage: getByPage
+            getByPage: getByPage,
+            csv: csv
         };
-
-        // this.findById = function (model) {
-        //     return Payment.get({id: model._id, page: 1});
-        // };
-        //
-        //
-        // this.new = function () {
-        //     return new Payment();
-        // }
-
-
     })
     .controller('PaymentsCtrl', function (gridData, paymentsApi, paginationService, $state) {
         var ctrl = this;
@@ -97,14 +106,14 @@ angular.module('meanApp')
         ctrl.gridData = gridData;
 
 
-        // function getByPage(page) {
-        //     return paymentsApi.getByPage(page)
-        //         .then(function (response) {
-        //             ctrl.gridData = response;
-        //         });
-        // }
+        function getByPage(page) {
+            return paymentsApi.getByPage(page)
+                .then(function (response) {
+                    ctrl.gridData = response.data;
+                });
+        }
 
-        // paginationService.setCallback(getByPage);
+        paginationService.setCallback(getByPage);
 
         // passing methods to grid controller
         ctrl.methods = {
@@ -137,35 +146,24 @@ angular.module('meanApp')
                 controller: 'PaymentsCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    gridData: function (paymentsApi, paginationService) {
-                        return paymentsApi.getAll()
+                    gridData: function (sonGridService, paymentsApi, paginationService, paymentsParams, csvService, gridService) {
+                        return paymentsApi.getCount()
                             .then(function (response) {
+                                gridService.setConfig(paymentsGridConfig);
+                                sonGridService.setName(paymentsGridConfig.title);
+                                paymentsParams.setParams({count: response.count}); // for server to know total ammount
+
                                 paginationService.setTotalCount(response.count);
+                                csvService.setFileName('payments');
+                                csvService.setCallback(paymentsApi.csv);
 
-                                return response.data;
+                                return paymentsApi.getByPage(1).then(function (res) {
+                                    console.log('res.data', res.data);
 
-                                // return paymentsApi.getAll().then(function (res) {
-                                //     return res;
-                                // })
+                                    return res.data;
+                                });
                             });
-                //         debugger;
-                //         return paymentsApi.getAll()
-                //             .then(function (response) {
-                //     //             // qsonGridService.setName(crossFeederGridConfig.title);
-                //     //             // gridService.setConfig(crossFeederGridConfig);
-                //     //             console.log('response', response);
-                //     //
-                //     //             paginationService.setTotalCount(response.count);
-                //     //             // csvService.setCallback(crossFeederApi.requestAllDataForCsv);
-                //     //             // csvService.setFileName('cross_feederr');
-                //     //             // // get with page 1 for init the view
-                //     //             // // return new promise, just for show
-                //     //             // return crossFeederApi.getByPage(1)
-                //     //             //     .then(function (response) {
-                //     //             //         return response;
-                //     //             //     });
-                //     //             return response.data;
-                //             });
+
                     }
                 }
             });

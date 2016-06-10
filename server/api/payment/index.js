@@ -5,8 +5,8 @@ var controller = require('./payment.controller');
 
 var router = express.Router();
 
-router.get('/', controller.index);
-router.post('/', controller.count);
+router.get('/', controller.count);
+router.post('/', controller.show);
 // router.post('/', controller.create);
 // router.put('/:id', controller.update);
 // router.patch('/:id', controller.update);

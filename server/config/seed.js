@@ -11,18 +11,19 @@ import faker from 'faker';
 
 
 class ThingC {
-    constructor() {
+    constructor(index) {
         this.name = faker.name.findName();
         this.info = faker.lorem.sentences();
         this.avatar = faker.image.avatar();
         this.image = faker.image.image();
+        this.index = index;
     }
 }
 
 
 let Things = [];
-for (let i = 0; i < 2000; i++) {
-    Things.push(new ThingC());
+for (let i = 0; i < 3000; i++) {
+    Things.push(new ThingC(i));
 }
 
 
