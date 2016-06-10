@@ -34,7 +34,7 @@ angular.module('meanApp')
     })
     .factory('paymentsGridConfig', function (GridConfigFactory) {
         var defaultColDefs = [
-            {displayName: 'id', field: 'id'},
+            // {displayName: 'id', field: 'id'},
             {displayName: 'index', field: 'index'},
             {displayName: 'name', field: 'name'}
         ];
@@ -100,10 +100,10 @@ angular.module('meanApp')
             csv: csv
         };
     })
-    .controller('PaymentsCtrl', function (gridData, paymentsApi, paginationService, $state) {
+    .controller('PaymentsCtrl', function (data, paymentsApi, paginationService, $state) {
         var ctrl = this;
         // init by resolve
-        ctrl.gridData = gridData;
+        ctrl.gridData = data;
 
 
         function getByPage(page) {
@@ -146,24 +146,20 @@ angular.module('meanApp')
                 controller: 'PaymentsCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    gridData: function (sonGridService, paymentsApi, paginationService, paymentsParams, csvService, gridService) {
+                    data: function (paymentsApi, gridService, paymentsGridConfig, paymentsParams, paginationService, csvService) {
                         return paymentsApi.getCount()
-                            .then(function (response) {
+                            .then((response) => {
                                 gridService.setConfig(paymentsGridConfig);
-                                sonGridService.setName(paymentsGridConfig.title);
-                                paymentsParams.setParams({count: response.count}); // for server to know total ammount
-
+                                // sonGridService.setName(paymentsGridConfig.title); // failing all route
+                                paymentsParams.setParams({count: response.count});
                                 paginationService.setTotalCount(response.count);
                                 csvService.setFileName('payments');
                                 csvService.setCallback(paymentsApi.csv);
-
-                                return paymentsApi.getByPage(1).then(function (res) {
-                                    console.log('res.data', res.data);
-
-                                    return res.data;
-                                });
+                                return paymentsApi.getByPage(1)
+                                    .then(function (resp) {
+                                        return resp.data;
+                                    })
                             });
-
                     }
                 }
             });
