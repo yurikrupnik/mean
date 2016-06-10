@@ -70,7 +70,7 @@ function respondWithCount(res, statusCode) {
 }
 
 
-// Gets a list of Payments = Count
+// Gets a list Count
 export function count(req, res) {
     return Payment.find().count().exec()
         .then(response => {
@@ -80,21 +80,15 @@ export function count(req, res) {
         .catch(handleError(res));
 }
 
-// Gets a single Payment from the DB
+// Gets a list of Payments Depend on page and limit body params
 export function show(req, res) {
-    // let {page, limit, total} = req.query;
-    // // limit(0) = gets all
-    //
-    //
-    // let currentPage = Number(page);
-    // let max = Number(limit);
-    // let count = Number(total);
-    // let start = 0; // todo find this
-    // let end = 1+max;
-
-    // let quert= req.query;
-    return Payment.find({index: { $gt: 0, $lt: 200 } }).exec()
+    let {limit, page} = req.body;
+    let gt = (page === 1) ? 0 : page * limit;
+    let lt = gt + limit;
+    return Payment.find({index: { $gt: gt, $lt: lt } }).exec()
         .then(function (response) {
+            console.log('response.length', response.length);
+
             return {
                 data: response
             };

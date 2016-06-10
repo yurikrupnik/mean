@@ -12,11 +12,10 @@ angular.module('meanApp')
         }
 
         var params = {
-            page: 1,
+            page: 1, // number of pagination page, init with 1
+            limit: 100 // how many to get per call - csv and pagination grid
             // page_size: -1,
-            limit: 1000,
             // include_total: false,
-            total: 0
             // query: '',
             // cell_fields: ['location'],
             // page: 0,
