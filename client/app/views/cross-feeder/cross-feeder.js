@@ -127,8 +127,6 @@
             }
 
             this.getFullData = function (params) {
-                console.log('params', params);
-
                 spinnerService.show();
                 return $http.get(url)
                     .then(splitDataToDataAndCount)

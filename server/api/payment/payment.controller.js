@@ -1,15 +1,11 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/payments              ->  index
- * POST    /api/payments              ->  create
- * GET     /api/payments/:id          ->  show
- * PUT     /api/payments/:id          ->  update
- * DELETE  /api/payments/:id          ->  destroy
+ * GET     /api/payments              ->  count
+ * POST    /api/payments              ->  show
  */
 
 'use strict';
 
-import _ from 'lodash';
 import Payment from './payment.model';
 
 function handleError(res, statusCode) {
@@ -42,13 +38,24 @@ export function count(req, res) {
 
 // Gets a list of Payments Depend on page and limit body params
 export function show(req, res) {
-    let {limit, page} = req.body;
-    let gt = (page === 1) ? 0 : page * limit;
-    let lt = gt + limit;
-    return Payment.find({index: { $gt: gt, $lt: lt } }).exec()
-        .then(function (response) {
-            console.log('response.length', response.length);
 
+    function buildQueryByIndex(body) {
+        let {limit, page, csv} = body;
+        let gt, lt;
+        if (csv && page >= 1) { // todo explain
+            gt = (page - 1) * limit; // example page=2 for csv, will pass index 1000+
+        } else {
+            gt = (page === 1) ? 0 : page * limit;
+        }
+        lt = gt + limit;
+        console.log('page which server got as parameter', page);
+
+        return {index: {$gt: gt, $lt: lt}};
+    }
+
+
+    return Payment.find(buildQueryByIndex(req.body)).exec()
+        .then(function (response) {
             return {
                 data: response
             };
