@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanApp')
-    .factory('paymentsParams', function (lodash) {
+    .factory('paymentsParams', function (pagingDropdownOptions, lodash) {
 
         function setParams(a) {
             params = lodash.assign(params, a);
@@ -11,9 +11,11 @@ angular.module('meanApp')
             return params;
         }
 
+        var selected = pagingDropdownOptions.getSelected();
+
         var params = {
             page: 1, // number of pagination page, init with 1
-            limit: 100 // how many to get per call - csv and pagination grid
+            limit: selected.value // how many to get per call - csv and pagination grid
             // page_size: -1,
             // include_total: false,
             // query: '',
@@ -59,7 +61,7 @@ angular.module('meanApp')
         return GridConfigFactory('Payments', defaultColDefs.concat(parametersChanged, payments), sortOptions);
 
     })
-    .factory('paymentsApi', function ($resource, spinnerService, paymentsParams, lodash, $q) {
+    .factory('paymentsApi', function ($resource, spinnerService, paymentsParams, pagingDropdownOptions, lodash, $q) {
         var url = '/api/payments';
         var defaultParams = {
             // isArray: false,
@@ -85,8 +87,10 @@ angular.module('meanApp')
 
         function getByPage(page) {
             spinnerService.show();
+            var selected = pagingDropdownOptions.getSelected();
             var params = paymentsParams.getParams();
             params.page = page;
+            params.limit = selected.value;
             return Payment.post(params).$promise.finally(res => spinnerService.hide());
         }
 
