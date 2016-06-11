@@ -66,7 +66,7 @@
 
                     ctrl.selected = pagingDropdownOptions.getSelected();
 
-                    ctrl.handlePageChange = function (page) { // fix this
+                    ctrl.handlePageChange = function (page) {
                         return paginationService.getCallback(page);
                     };
 

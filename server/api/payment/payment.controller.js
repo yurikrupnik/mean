@@ -42,13 +42,12 @@ export function show(req, res) {
     function buildQueryByIndex(body) {
         let {limit, page, csv} = body;
         let gt, lt;
-        if (csv && page >= 1) { // todo explain
+        if (csv && page >= 1) {
             gt = (page - 1) * limit; // example page=2 for csv, will pass index 1000+
         } else {
             gt = (page === 1) ? 0 : page * limit;
         }
         lt = gt + limit;
-        console.log('page which server got as parameter', page);
 
         return {index: {$gt: gt, $lt: lt}};
     }
