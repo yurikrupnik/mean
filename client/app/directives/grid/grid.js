@@ -60,7 +60,6 @@
             this.setConfig = setConfig;
             this.getConfig = getConfig;
         })
-
         .controller('gridController', gridController)
         .directive('grid', gridDirective);
 })();

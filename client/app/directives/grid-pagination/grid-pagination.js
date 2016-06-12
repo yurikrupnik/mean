@@ -6,7 +6,10 @@
             {value: 25, name: 25},
             {value: 50, name: 50},
             {value: 100, name: 100},
-            {value: 150, name: 150}
+            {value: 150, name: 150},
+            {value: 200, name: 200},
+            {value: 500, name: 500},
+            {value: 1000, name: 1000}
         ])
         .factory('pagingDropdownOptions', function (lodash, DROPDOWNOPTION) {
 

@@ -22,7 +22,7 @@ class ThingC {
 
 
 let Things = [];
-for (let i = 0; i < 3000; i++) {
+for (let i = 0; i < 100000; i++) {
     Things.push(new ThingC(i));
 }
 

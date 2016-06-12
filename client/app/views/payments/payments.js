@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('meanApp')
-    .factory('paymentsParams', function (pagingDropdownOptions, lodash) {
+    .factory('paymentsParams', function (pagingDropdownOptions) {
 
         function setParams(a) {
-            params = lodash.assign(params, a);
+            params = lodash.assign({}, params, a);
         }
 
         function getParams() {
@@ -61,7 +61,7 @@ angular.module('meanApp')
         return GridConfigFactory('Payments', defaultColDefs.concat(parametersChanged, payments), sortOptions);
 
     })
-    .factory('paymentsApi', function ($resource, spinnerService, paymentsParams, pagingDropdownOptions, lodash, $q) {
+    .factory('paymentsApi', function ($resource, spinnerService, paymentsParams, pagingDropdownOptions, lodash, CSVService) {
         var url = '/api/payments';
         var defaultParams = {
             // isArray: false,
@@ -80,6 +80,8 @@ angular.module('meanApp')
 
         var Payment = $resource(url, defaultParams, actions);
 
+        CSVService.setResource(Payment, 'post');
+        
         function getCount() {
             spinnerService.show();
             return Payment.get().$promise.finally(res => spinnerService.hide());
@@ -87,85 +89,27 @@ angular.module('meanApp')
 
         function getByPage(page) {
             spinnerService.show();
-            var selected = pagingDropdownOptions.getSelected();
             var params = paymentsParams.getParams();
+            params.limit = pagingDropdownOptions.getSelected().value;
             params.page = page;
-            params.limit = selected.value;
             return Payment.post(params).$promise.finally(res => spinnerService.hide());
         }
 
-
-        function getData(object) {
-            return object.data;
-        }
-
-        function getDataOfResponses(responses) {
-            return lodash.map(responses, getData);
-        }
-
-        function flattenResponses(responses) {
-            // responses = [ [{},{}...], [], []]
-            return lodash.flatten(getDataOfResponses(responses));
-        }
-
-
-        function createArrayOfPromises(totalCount, params) {
-            // params.page_size = 10000; // objects in single page
-            var cap = Math.ceil(totalCount / params.limit); // amount of pages needed to fetch all the data for scv
-            var pages = lodash.range(0, cap);
-
-            function createPromise(page) {
-                // params.page = page;
-                return Payment.post(lodash.assign(params, {page: page})).$promise;
-            }
-
-            console.log('pages.length', pages.length);
-
-            return lodash.map(pages, function(page) { // create array of needed api calls to fetch the data for scv
-                return function (p) {
-                    var current = p + 1;
-                    console.log('current', current);
-
-                    // current gets last = closure does not work for me here
-                    return createPromise(current);
-                }(page);
-            });
-        }
-
         function csv() {
-
-
             var params = paymentsParams.getParams();
-            params.limit = 1000;
             params.csv = true;
 
-            var totalCount = 3000; // todo get it out maybe?
-
-            // var promises = createArrayOfPromises(totalCount, lodash.assign({}, params));
-
-            var promises = [
-                Payment.post({csv: true, limit: 1000, page: 1}).$promise,
-                Payment.post({csv: true, limit: 1000, page: 2}).$promise,
-                Payment.post({csv: true, limit: 1000, page: 3}).$promise,
-                // Payment.post({csv: true, limit: 1000, page: 4}).$promise,
-                // Payment.post({csv: true, limit: 1000, page: 5}).$promise
-            ];
-
-
-            spinnerService.show();
-            return $q.all(promises)
-                .then((responseArray) => {
-                    return flattenResponses(responseArray);
+            function handleCSV(response) {
+                return lodash.map(response, function (val) {
+                    return {
+                        Id: val.id,
+                        Name: val.name
+                    }
                 })
-                .then(function (response) {
-                    return lodash.map(response, function (val) {
-                        return {
-                            Index: val.index,
-                            Name: val.name
-                        };
-                    });
-                })
-                .finally(res => spinnerService.hide());
+            }
+
+            return CSVService.createPromise(params)
+                .then(handleCSV);
         }
 
         return {
@@ -220,7 +164,7 @@ angular.module('meanApp')
                 controller: 'PaymentsCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    data: function (paymentsApi, gridService, paymentsGridConfig, paymentsParams, paginationService, csvService) {
+                    data: function (paymentsApi, gridService, paymentsGridConfig, paginationService, csvService) {
                         return paymentsApi.getCount()
                             .then((response) => {
                                 gridService.setConfig(paymentsGridConfig);
