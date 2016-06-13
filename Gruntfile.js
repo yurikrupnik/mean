@@ -793,7 +793,7 @@ module.exports = function (grunt) {
     }
 
     else grunt.task.run([
-      // 'test:server',
+      'test:server',
       'test:client'
     ]);
   });

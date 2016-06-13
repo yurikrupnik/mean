@@ -48,11 +48,11 @@ export function show(req, res) {
             gt = (page === 1) ? 0 : page * limit;
         }
         lt = gt + limit;
+        console.log('page which server got as parameter', page);
 
         return {index: {$gt: gt, $lt: lt}};
     }
-
-
+    
     return Payment.find(buildQueryByIndex(req.body)).exec()
         .then(function (response) {
             return {

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('meanAppDirectives')
+        .module('toggleDirective', ['ngLodash'])
         .service('toggleService', function (lodash, $log) {
             var isBoolean = lodash.isBoolean;
             var reduce = lodash.reduce;
@@ -38,22 +38,19 @@
                 reduce(props, toggleBool, initialState);
             };
         })
-        .directive('toggleState', toggle);
+        .directive('toggleState', function (toggleService) {
+            return {
+                restrict: 'A',
+                link: linkFunc
+            };
 
-    /** @ngInject */
-    function toggle(toggleService) {
-        return {
-            restrict: 'A',
-            link: linkFunc
-        };
-
-        function linkFunc(scope, el, attr) {
-            el.on('click', function () {
-                scope.$apply(function () {
-                    toggleService.toggleStateOnObject(scope, attr.toggleState)
-                })
-            });
-        }
-    }
-
+            function linkFunc(scope, el, attr) {
+                el.on('click', function () {
+                    scope.$apply(function () {
+                        toggleService.toggleStateOnObject(scope, attr.toggleState)
+                    })
+                });
+            }
+        });
+    
 })();

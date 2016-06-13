@@ -1,4 +1,4 @@
 (function () {
     "use strict";
-    angular.module('meanAppDirectives', ['ui.select', 'gridPagination', 'grid', 'qson.grid', 'csv']);
+    angular.module('meanAppDirectives', ['ui.select', 'gridPagination', 'grid', 'qson.grid', 'csv', 'toggleDirective']);
 })();

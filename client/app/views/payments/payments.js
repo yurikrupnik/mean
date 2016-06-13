@@ -81,7 +81,7 @@ angular.module('meanApp')
         var Payment = $resource(url, defaultParams, actions);
 
         CSVService.setResource(Payment, 'post');
-        
+
         function getCount() {
             spinnerService.show();
             return Payment.get().$promise.finally(res => spinnerService.hide());
@@ -102,7 +102,7 @@ angular.module('meanApp')
             function handleCSV(response) {
                 return lodash.map(response, function (val) {
                     return {
-                        Id: val.id,
+                        Index: val.index,
                         Name: val.name
                     }
                 })
@@ -166,17 +166,16 @@ angular.module('meanApp')
                 resolve: {
                     data: function (paymentsApi, gridService, paymentsGridConfig, paginationService, csvService) {
                         return paymentsApi.getCount()
-                            .then((response) => {
+                            .then(function(response) {
                                 gridService.setConfig(paymentsGridConfig);
                                 // sonGridService.setName(paymentsGridConfig.title); // failing all route
-                                // paymentsParams.setParams({count: response.count});
                                 paginationService.setTotalCount(response.count);
                                 csvService.setFileName('payments');
                                 csvService.setCallback(paymentsApi.csv);
                                 return paymentsApi.getByPage(1)
                                     .then(function (resp) {
                                         return resp.data;
-                                    })
+                                    });
                             });
                     }
                 }
