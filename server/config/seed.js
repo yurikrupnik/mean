@@ -3,97 +3,82 @@
  * to disable, edit config/environment/index.js, and set `seedDB: false`
  */
 
-'use strict';
-import Thing from '../api/thing/thing.model';
+// 'use strict';
+// import Thing from '../api/thing/thing.model';
 import User from '../api/user/user.model';
 import Payment from '../api/payment/payment.model';
+import faker from 'faker';
 
 
 class ThingC {
-  constructor() {
-    this.name = faker.name.findName();
-    this.info = faker.lorem.sentences();
-    this.avatar = faker.image.avatar();
-    this.image = faker.image.image();
-  }
+    constructor(index) {
+        this.name = faker.name.findName();
+        this.info = faker.lorem.sentences();
+        this.avatar = faker.image.avatar();
+        this.image = faker.image.image();
+        this.index = index;
+    }
 }
 
 
 let Things = [];
-for (let i = 0; i <= 19; i++) {
-  Things.push(new ThingC());
+for (let i = 0; i < 100000; i++) {
+    Things.push(new ThingC(i));
 }
 
 
-import faker from 'faker';
-class ThingModel {
-  constructor() {
-    this.name = faker.name.find
-  }
-}
-
-Thing.find({}).remove()
-  .then(() => {
-    Thing.create({
-        name: 'Development Tools',
-        info: 'Integration with popular tools such as Bower, Grunt, Babel, Karma, ' +
-        'Mocha, JSHint, Node Inspector, Livereload, Protractor, Jade, ' +
-        'Stylus, Sass, and Less.'
-    }, {
-        name: 'Server and Client integration',
-        info: 'Built with a powerful and fun stack: MongoDB, Express, ' +
-        'AngularJS, and Node.'
-    }, {
-        name: 'Smart Build System',
-        info: 'Build system ignores `spec` files, allowing you to keep ' +
-        'tests alongside code. Automatic injection of scripts and ' +
-        'styles into your index.html'
-    }, {
-        name: 'Modular Structure',
-        info: 'Best practice client and server structures allow for more ' +
-        'code reusability and maximum scalability'
-    }, {
-        name: 'Optimized Build',
-        info: 'Build process packs up your templates as a single JavaScript ' +
-        'payload, minifies your scripts/css/images, and rewrites asset ' +
-        'names for caching.'
-    }, {
-        name: 'Deployment Ready',
-        info: 'Easily deploy your app to Heroku or Openshift with the heroku ' +
-        'and openshift subgenerators'
-    });
-  });
+// Thing.find({}).remove()
+//   .then(() => {
+//     Thing.create({
+//         name: 'Development Tools',
+//         info: 'Integration with popular tools such as Bower, Grunt, Babel, Karma, ' +
+//         'Mocha, JSHint, Node Inspector, Livereload, Protractor, Jade, ' +
+//         'Stylus, Sass, and Less.'
+//     }, {
+//         name: 'Server and Client integration',
+//         info: 'Built with a powerful and fun stack: MongoDB, Express, ' +
+//         'AngularJS, and Node.'
+//     }, {
+//         name: 'Smart Build System',
+//         info: 'Build system ignores `spec` files, allowing you to keep ' +
+//         'tests alongside code. Automatic injection of scripts and ' +
+//         'styles into your index.html'
+//     }, {
+//         name: 'Modular Structure',
+//         info: 'Best practice client and server structures allow for more ' +
+//         'code reusability and maximum scalability'
+//     }, {
+//         name: 'Optimized Build',
+//         info: 'Build process packs up your templates as a single JavaScript ' +
+//         'payload, minifies your scripts/css/images, and rewrites asset ' +
+//         'names for caching.'
+//     }, {
+//         name: 'Deployment Ready',
+//         info: 'Easily deploy your app to Heroku or Openshift with the heroku ' +
+//         'and openshift subgenerators'
+//     });
+//   });
 
 User.find({}).remove()
-  .then(() => {
-    User.create({
-        provider: 'local',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'test'
-      }, {
-        provider: 'local',
-        role: 'admin',
-        name: 'Admin',
-        email: 'admin@example.com',
-        password: 'admin'
-      })
-      .then(() => {
-        console.log('finished populating users');
-      });
-  });
+    .then(() => {
+        User.create({
+                provider: 'local',
+                name: 'Test User',
+                email: 'test@example.com',
+                password: 'test'
+            }, {
+                provider: 'local',
+                role: 'admin',
+                name: 'Admin',
+                email: 'admin@example.com',
+                password: 'admin'
+            })
+            .then(() => {
+                console.log('finished populating users');
+            });
+    });
 
 Payment.find({}).remove()
-  .then(() => {
-    Payment.create({
-      name: 'television',
-      dates: {
-        bought: new Date(),
-        delivered: new Date()
-      },
-      info: 'i wanted a television',
-      isNeeded: true,
-      image: 'none atm',
-      site: 'eco tec'
-    })
-  });
+    .then(() => {
+        Payment.create(Things)
+    });
