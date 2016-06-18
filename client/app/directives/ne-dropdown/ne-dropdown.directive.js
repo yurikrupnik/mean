@@ -32,6 +32,7 @@
             uiSelectConfig.searchEnabled = true;
             uiSelectConfig.resetSearchInput = true;
             uiSelectConfig.theme = 'bootstrap';
+            uiSelectConfig.removeSelected = false;
 
             // uiSelectConfig.autofocus = false;
             // uiSelectConfig.limitTo = 2;

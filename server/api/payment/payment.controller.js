@@ -52,7 +52,7 @@ export function show(req, res) {
 
         return {index: {$gt: gt, $lt: lt}};
     }
-    
+
     return Payment.find(buildQueryByIndex(req.body)).exec()
         .then(function (response) {
             return {

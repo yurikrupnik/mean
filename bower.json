@@ -16,7 +16,7 @@
     "angular-ui-router": "~0.2.15",
     "angular-validation-match": "~1.5.2",
     "ng-lodash": "^0.4.0",
-    "angular-ui-select": "^0.17.1",
+    "angular-ui-select": "^0.18.0",
     "angular-ui-grid": "^3.1.1",
     "ng-csv": "^0.3.6",
     "moment": "^2.13.0"

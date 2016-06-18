@@ -36,7 +36,7 @@ angular.module('meanApp')
     .factory('paymentsGridConfig', function (GridConfigFactory) {
         var defaultColDefs = [
             // {displayName: 'id', field: 'id'},
-            {displayName: 'index', field: 'index'},
+            // {displayName: 'index', field: 'index'},
             {displayName: 'name', field: 'name'}
         ];
         var parametersChanged = {
@@ -105,11 +105,10 @@ angular.module('meanApp')
                         Index: val.index,
                         Name: val.name
                     }
-                })
+                });
             }
 
-            return CSVService.createPromise(params)
-                .then(handleCSV);
+            return CSVService.createPromise(params).then(handleCSV);
         }
 
         return {
@@ -118,11 +117,24 @@ angular.module('meanApp')
             csv: csv
         };
     })
-    .controller('PaymentsCtrl', function (data, paymentsApi, paginationService, $state) {
+    .run(function (paymentsApi, gridService, paymentsGridConfig, paginationService, csvService) {
+        paymentsApi.getCount().then(function (response) {
+            // paginationService.setTotalCount(response.count);
+            paginationService.setTotalCount(100);
+        });
+        gridService.setConfig(paymentsGridConfig);
+        csvService.setFileName('payments');
+        csvService.setCallback(paymentsApi.csv);
+    })
+    .controller('PaymentsCtrl', function (paymentsApi, paginationService, $state) {
         var ctrl = this;
         // init by resolve
-        ctrl.gridData = data;
+        ctrl.gridData = [];
 
+        paymentsApi.getByPage(1)
+            .then(function (resp) {
+                ctrl.gridData = resp.data;
+            });
 
         function getByPage(page) {
             return paymentsApi.getByPage(page)
@@ -162,22 +174,6 @@ angular.module('meanApp')
                 url: '/payments',
                 templateUrl: 'app/views/payments/payments.html',
                 controller: 'PaymentsCtrl',
-                controllerAs: 'ctrl',
-                resolve: {
-                    data: function (paymentsApi, gridService, paymentsGridConfig, paginationService, csvService) {
-                        return paymentsApi.getCount()
-                            .then(function(response) {
-                                gridService.setConfig(paymentsGridConfig);
-                                // sonGridService.setName(paymentsGridConfig.title); // failing all route
-                                paginationService.setTotalCount(response.count);
-                                csvService.setFileName('payments');
-                                csvService.setCallback(paymentsApi.csv);
-                                return paymentsApi.getByPage(1)
-                                    .then(function (resp) {
-                                        return resp.data;
-                                    });
-                            });
-                    }
-                }
+                controllerAs: 'ctrl'
             });
     });

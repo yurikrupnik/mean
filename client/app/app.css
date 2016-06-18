@@ -8977,8 +8977,8 @@ fieldset[disabled] .btn-yahoo.active {
   text-decoration: none;
 }
 .ui-select-container {
-  min-width: 200px;
-  max-width: 400px;
+  display: inline-block;
+  width: 100px;
 }
 .thing-form {
   margin: 20px 0;

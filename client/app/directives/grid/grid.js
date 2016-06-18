@@ -48,7 +48,6 @@
         .service('gridService', function (lodash) {
             var config = {};
 
-
             function getConfig() {
                 return config;
             }
@@ -56,7 +55,7 @@
             function setConfig(a) {
                 config = lodash.isObject(a) ? a : {};
             }
-
+            
             this.setConfig = setConfig;
             this.getConfig = getConfig;
         })

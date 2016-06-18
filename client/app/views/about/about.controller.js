@@ -3,7 +3,6 @@
     'use strict';
 
 
-
     angular.module('meanApp')
         .factory('GridConfigFactory', function () {
             function GridConfigConstructor(title, columnDefs, sortInfo) {
@@ -53,7 +52,7 @@
             }
         });
 
-    function AboutController() {
+    function AboutController(lodash) {
 
         var ctrl = this;
 
@@ -68,6 +67,25 @@
                 maxDate: moment().format('YYYY-MM-DD')
             }
         };
+
+
+        ctrl.selectedQuery = [];
+
+        function handleQueryBuild() {
+
+            ctrl.query = ctrl.selectedQuery.map(function (val, index) {
+                return val.map(function (value) {
+                    return value && value.value || value; // value in an object or a string
+                }).join(' ');
+
+            }).join(' ');
+
+            console.log('ctrl.query', ctrl.query);
+
+        }
+
+
+        ctrl.handleQueryBuild = handleQueryBuild;
     }
 
 
