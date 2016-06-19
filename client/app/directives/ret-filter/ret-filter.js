@@ -15,57 +15,53 @@
             {text: 'Or', value: 'or'},
             {text: 'And', value: 'and'}
         ])
-        .directive('retFilter', function () {
+        .controller('retFilterCtrl', function (SINGLEOPERATIONS, GENERAL, OPERATIONS) {
+            var ctrl = this;
+
+            ctrl.SINGLEOPERATIONS = SINGLEOPERATIONS;
+            ctrl.GENERAL = GENERAL;
+            ctrl.OPERATIONS = OPERATIONS;
+
+            // set on model the selected values
+            var initModel = [
+                '',
+                GENERAL[0],
+                OPERATIONS[0],
+                ''
+            ];
+            var newModel = [
+                SINGLEOPERATIONS[0],
+                GENERAL[0],
+                OPERATIONS[0],
+                ''
+            ];
+
+            // must copy the model to solve scope problem
+            function setModel(model) {
+                return angular.copy(model)
+            }
+
+            // init the first row
+            ctrl.rows[0] = setModel(initModel);
+
+            ctrl.addRow = function () {
+                ctrl.rows.push(setModel(newModel));
+            };
+
+            ctrl.removeRow = function (index) {
+                ctrl.rows.splice(index, 1);
+            };
+        })
+        .directive('retFilter', function (lodash) {
             return {
                 restrict: 'E',
                 templateUrl: 'app/directives/ret-filter/ret-filter.html',
                 scope: {
                     rows: '='
                 },
-                controller: function (SINGLEOPERATIONS, GENERAL, OPERATIONS) {
-                    var ctrl = this;
-
-                    ctrl.SINGLEOPERATIONS = SINGLEOPERATIONS;
-                    ctrl.GENERAL = GENERAL;
-                    ctrl.OPERATIONS = OPERATIONS;
-                },
+                controller: 'retFilterCtrl',
                 bindToController: true,
-                controllerAs: 'ctrl',
-                link: function (scope, elem, attrs) {
-                    var ctrl = scope.ctrl;
-
-                    // set on model the selected values
-                    var initModel = [
-                        '',
-                        ctrl.GENERAL[0],
-                        ctrl.OPERATIONS[0],
-                        ''
-                    ];
-                    var newModel = [
-                        ctrl.SINGLEOPERATIONS[0],
-                        ctrl.GENERAL[0],
-                        ctrl.OPERATIONS[0],
-                        ''
-                    ];
-
-                    function setModel(model) {
-                        return angular.copy(model)
-                    }
-                    // init the first row
-                    ctrl.rows[0] = setModel(initModel);
-
-                    ctrl.addRow = function () {
-                        ctrl.rows.push(setModel(newModel));
-                    };
-
-                    ctrl.removeRow = function (index) {
-                        console.log('index', index);
-
-                        ctrl.rows.splice(index, 1);
-                    };
-
-                }
+                controllerAs: 'ctrl'
             }
-
         });
 })();

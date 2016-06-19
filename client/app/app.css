@@ -8980,6 +8980,10 @@ fieldset[disabled] .btn-yahoo.active {
   display: inline-block;
   width: 100px;
 }
+.about .someshit {
+  width: 500px;
+  margin: 0 auto;
+}
 .thing-form {
   margin: 20px 0;
 }
