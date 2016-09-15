@@ -4,7 +4,11 @@
         <ne-dropdown items="$parent.ctrl.SINGLEOPERATIONS" prop="text" model="row[0]" ng-hide="$index === 0"></ne-dropdown>
         <ne-dropdown items="$parent.ctrl.GENERAL" prop="text" model="row[1]"></ne-dropdown>
         <ne-dropdown items="$parent.ctrl.OPERATIONS" prop="text" model="row[2]"></ne-dropdown>
-        <input type="text" ng-model="row[3]">
+
+
+        <input type="checkbox" ng-mode="row[3]" ng-hide="ctrl.show">
+        <input type="text" ng-model="row[3]" ng-show="ctrl.show">
+
         <span ng-click="ctrl.addRow()">+</span>
         <span ng-click="ctrl.removeRow($index)" ng-hide="$last === true">-</span>
     </div>

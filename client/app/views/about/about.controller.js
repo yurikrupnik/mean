@@ -55,7 +55,6 @@
     function AboutController(lodash) {
 
         var ctrl = this;
-
         ctrl.dates = {
             start: {
                 date: new Date(), //  moment().subtract(1, 'days').format('YYYY-MM-DD'), // set start date to yesterday
@@ -73,12 +72,36 @@
 
         function handleQueryBuild() {
 
-            ctrl.query = ctrl.selectedQuery.map(function (val, index) {
-                return val.map(function (value) {
-                    return value && value.value || value; // value in an object or a string
-                }).join(' ');
+            function handleQuotesByIndex(value, i) {
+                if (i === 3) {
+                    return "'" + value + "'";
+                } else if (i === 2) {
+                    // handle regex if
+                }
 
-            }).join(' ');
+                // handle more shit that are for
+
+                return value && value.value || value; // value in an object or a string
+            }
+
+            function handleJoiningQueryProps(value) {
+                return value.map(handleQuotesByIndex).join(' ');
+            }
+
+            function handleBrackets(v, i) {
+                if (i === 0) {
+                    return '(' + lodash.trim(v) + ')';
+                } else {
+                    var firstWord = v.substr(0, v.indexOf(" "));
+                    var rest = lodash.trim(v.substr(v.indexOf(" ")));
+                    return firstWord + ' ' + '(' + rest + ')';
+                }
+            }
+
+            ctrl.query = lodash
+                .map(ctrl.selectedQuery, handleJoiningQueryProps)
+                .map(handleBrackets)
+                .join(' ');
 
             console.log('ctrl.query', ctrl.query);
 

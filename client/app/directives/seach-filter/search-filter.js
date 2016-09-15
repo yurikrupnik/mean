@@ -15,8 +15,10 @@
             {text: 'Or', value: 'or'},
             {text: 'And', value: 'and'}
         ])
-        .controller('retFilterCtrl', function (SINGLEOPERATIONS, GENERAL, OPERATIONS) {
+        .controller('searchFilterCtrl', function (SINGLEOPERATIONS, GENERAL, OPERATIONS) {
             var ctrl = this;
+
+            ctrl.show =  true;
 
             ctrl.SINGLEOPERATIONS = SINGLEOPERATIONS;
             ctrl.GENERAL = GENERAL;
@@ -52,10 +54,10 @@
                 ctrl.rows.splice(index, 1);
             };
         })
-        .directive('retFilter', function () {
+        .directive('searchFilter', function () {
             return {
                 restrict: 'E',
-                templateUrl: 'app/directives/ret-filter/ret-filter.html',
+                templateUrl: 'app/directives/seach-filter/search-filter.html',
                 scope: {
                     rows: '='
                 },

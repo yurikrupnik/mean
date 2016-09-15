@@ -11,7 +11,10 @@ angular.module('meanApp', [
         'ngLodash',
         'meanAppDirectives',
         'meanAppServices',
-        'meanAppFilters'
+        'meanAppFilters',
+        '720kb.datepicker',
+        'ui.bootstrap',
+        'ngMaterial'
     ])
     .config(function ($urlRouterProvider, $locationProvider) {
         $urlRouterProvider

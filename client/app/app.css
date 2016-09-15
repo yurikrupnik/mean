@@ -8976,10 +8976,6 @@ fieldset[disabled] .btn-yahoo.active {
   align-items: center;
   text-decoration: none;
 }
-.ui-select-container {
-  display: inline-block;
-  width: 100px;
-}
 .about .someshit {
   width: 500px;
   margin: 0 auto;
