@@ -1,0 +1,79 @@
+<nav class="navbar navbar-default no-margin-bottom" role="navigation">
+    <div class="container-fluid container-nav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="navCollapse = !navCollapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref-active="active" ui-sref="qson.dashboard"><img
+                src="/gui/v3/static/img/design/cisco_logo.png"></a>
+        </div>
+
+        <div class=" row" ng-class="{in: navCollapse}"> <!--collapse navbar-collapse-->
+            <ul class="nav navbar-nav col-xs-7">
+                <li class="visible-xs visible-sm welcome-sm">
+                    Welcome, {{user.screen_name}}
+                    <div class="pull-right">
+                        <!-- <a href="/gui/v3/auth/logout" class="sign-out-link">Sign Out</a> -->
+                        <a ui-sref="logout" class="sign-out-link" ng-click="logout()">Sign Out</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </li>
+
+                <li ng-class="{'active': _.includes(curState.current.name, 'qson.dashboard')}"><a
+                    ui-sref="qson.dashboard" class="dashboard"><i class="fa fa-2x fa-dashboard"></i>DASHBOARD</a></li>
+                <li ng-class="{'active': _.includes(curState.current.name, 'qson.activities')}"><a
+                    ui-sref="qson.activities" class="son-activities">SON ACTIVITIES</a></li>
+                <li ng-class="{'active': _.includes(curState.current.name, 'qson.map')}"><a
+                    ui-sref="qson.map.params(getMapParamsFromLocalStorage())" class="maps">MAP</a></li>
+                <li ng-class="{'active': _.includes(curState.current.name, 'qson.settings')}"><a
+                    href="/gui/v3/settings/" class="settings">SETTINGS</a></li>
+                <li ng-class="{'active': _.includes(curState.current.name, 'qson.reports')}"><a ui-sref="qson.reports"
+                                                                                                class="reports">REPORTS</a>
+                </li>
+                <li ng-if="user.is_privileged" class=""><a href="/gui/v3/admin/" class="admin">ADMIN</a></li>
+                <li ng-if="!user.is_privileged" ng-click="openModal()"><a class="about">ABOUT</a></li>
+                <li class="visible-xs visible-sm row"
+                    ng-if="dataReady('currentMarket') && curState.current.name != 'qson.dashboard'">
+                    <div class="col-xs-2">
+                        Market:
+                    </div>
+                    <div class="col-xs-10" ng-if="markets.length>0">
+                        <qson-dropdown
+                            items="markets"
+                            prop="text"
+                            model="selectedMarket"
+                            callback="getSelectedMarket(selectedMarket)"
+                        ></qson-dropdown>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="col-xs-3" ng-if="dataReady('user') && dataReady('currentMarket')">
+                <!--nav navbar-nav navbar-right hidden-xs hidden-sm"-->
+                <div class="row welcome">
+                    <div class="col-xs-8 welcome-text">
+                        Welcome, <span ng-bind="user.screen_name"></span>
+                    </div>
+                    <div class="col-xs-4"><a href="" class="sign-out-link" ng-click="logout()">Sign Out</a></div>
+                </div>
+                <div class="row" ng-if="curState.current.name != 'qson.dashboard'">
+                    <div class="col-xs-3">
+                        Market:
+                    </div>
+                    <div class="col-xs-9" ng-if="markets.length>0">
+                        <qson-dropdown
+                            items="markets"
+                            prop="text"
+                            model="selectedMarket"
+                            callback="getSelectedMarket(selectedMarket)"
+                        ></qson-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

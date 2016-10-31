@@ -1,10 +1,48 @@
 <div>
     <h4>Date-picker with min date and max date</h4>
 
-    <span>start</span>
-    <div>ctrl.dates.date : {{ctrl.dates.start.date}}</div>
-    <md-datepicker ng-model="ctrl.dates.start.date" md-placeholder="Enter date" md-max-date="ctrl.dates.start.maxDate"></md-datepicker>
-    <span>end</span>
-    <md-datepicker ng-model="ctrl.dates.end.date" md-placeholder="Enter date" md-min-date="ctrl.dates.end.minDate"></md-datepicker>
+    <!--<span>start</span>-->
+    <!--<div>ctrl.dates.date : {{ctrl.dates.start.date}}</div>-->
+    <!--<md-datepicker ng-model="ctrl.dates.start.date" md-placeholder="Enter date" md-max-date="ctrl.dates.start.maxDate"></md-datepicker>-->
+    <!--<span>end</span>-->
+    <!--<md-datepicker ng-model="ctrl.dates.end.date" md-placeholder="Enter date" md-min-date="ctrl.dates.end.minDate"></md-datepicker>-->
 
+    <!--<span>start</span>-->
+    <!--<div>ctrl.dates.start : {{ctrl.dates.start}}</div>-->
+    <!--<md-datepicker ng-model="ctrl.dates.start" md-placeholder="Enter date" md-max-date="ctrl.dates.end"></md-datepicker>-->
+    <!--<span>end</span>-->
+    <!--<md-datepicker ng-model="ctrl.dates1.end" md-placeholder="Enter date" md-min-date="ctrl.dates1.start" md-max-date="ctrl.dates1.currDate"></md-datepicker>-->
+
+
+    <div class="input-group">
+        <span class="input-group-addon">Start Date</span>
+        <input type="text"
+               class="form-control input-sm"
+               ng-model="ctrl.fu.dates.start"
+               is-open="ctrl.dates.start.isOpen"
+               uib-datepicker-popup="dd-MMMM-yyyy"
+               ng-required="true"
+               close-text="Close"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default btn-sm" toggle-state="ctrl.dates.start.isOpen"
+                    ng-click="ctrl.toggle()"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+
+
+        <span class="input-group-addon">End Date</span>
+        <input type="text"
+               class="form-control input-sm"
+               ng-model="ctrl.fu.dates.end.date"
+               is-open="ctrl.dates.end.isOpen"
+               uib-datepicker-popup="dd-MMMM-yyyy"
+               ng-required="true"
+               datepicker-options="ctrl.options"
+               close-text="Close"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default btn-sm" toggle-state="ctrl.dates.end.isOpen"
+                    ng-click="ctrl.toggle()"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+    </div>
 </div>
