@@ -1,5 +1,7 @@
 # mean
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/yurikrupnik/mean.svg)](https://greenkeeper.io/)
+
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.6.1.
 
 ## Getting Started
